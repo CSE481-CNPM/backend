@@ -12,6 +12,9 @@ module.exports = {
     'linebreak-style': 0,
     'comma-dangle': 0,
     'implicit-arrow-linebreak': 0,
-    'import/newline-after-import': 0
+    'import/newline-after-import': 0,
+    'prefer-destructuring': 0,
+    'no-unused-vars': 0,
+    'no-control-regex': 'errors'
   }
 };
