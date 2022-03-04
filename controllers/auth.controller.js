@@ -16,5 +16,7 @@ exports.login = asyncHandler(async (req, res) => {
  * @access PUBLIC
  */
 exports.register = asyncHandler(async (req, res) => {
-  res.send('register');
+  const body = req.body;
+  const { firstname, lastname, email, phone, password, role } = body;
+  const user = new User();
 });
