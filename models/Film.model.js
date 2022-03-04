@@ -1,9 +1,6 @@
 const mongoose = require('mongoose');
 
 const FilmSchema = new mongoose.Schema({
-  IDFilm: {
-    type: Object.id,
-  },
   nameFilm: {
     type: String,
     required: [true, 'Tên Phim không được để trống'],

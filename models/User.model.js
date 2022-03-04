@@ -45,6 +45,7 @@ const UserSchema = new mongoose.Schema({
   },
   bookingTicket: [
     {
+      type: Object,
       nameFilm: {
         type: String,
         default: '',
@@ -77,8 +78,13 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: '',
       },
+      ticket: {
+        ref: 'Ticket',
+        type: mongoose.Schema.Types.ObjectId,
+      },
     },
   ],
+
   createdAt: {
     type: Date,
     default: Date.now,
