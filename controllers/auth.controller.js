@@ -7,7 +7,34 @@ const User = require('../models/User.model');
  * @access PUBLIC
  */
 exports.login = asyncHandler(async (req, res) => {
-  res.send('login');
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({
+      success: false,
+      message: 'Hãy cung cấp email và mật khẩu đầy đủ'
+    });
+  }
+
+  const user = await User.findOne({ email }).select('+password');
+
+  if (!user) {
+    return res.status(401).json({
+      success: false,
+      message: 'Tài khoản không tồn tại'
+    });
+  }
+
+  const isMatch = await user.matchPassword(password);
+
+  if (!isMatch) {
+    return res.status(401).json({
+      success: false,
+      message: 'Sai mật khẩu'
+    });
+  }
+
+  sendTokenResponse(user, 200, res);
 });
 
 /**
@@ -16,7 +43,32 @@ exports.login = asyncHandler(async (req, res) => {
  * @access PUBLIC
  */
 exports.register = asyncHandler(async (req, res) => {
-  const body = req.body;
-  const { firstname, lastname, email, phone, password, role } = body;
-  const user = new User();
+  const { firstname, lastname, email, phone, password } = req.body;
+  const role = req.body.role === 'admin' || req.body.role ? 'admin' : 'user';
+
+  const user = await User.create({
+    firstname,
+    lastname,
+    email,
+    password,
+    role
+  });
+
+  sendTokenResponse(user, 200, res);
 });
+
+const sendTokenResponse = async (user, statusCode, res) => {
+  const token = user.signedJwt();
+
+  const options = {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true
+  };
+
+  res.status(statusCode).cookie('token', token, options).json({
+    success: true,
+    token
+  });
+};
