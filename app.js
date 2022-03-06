@@ -6,6 +6,7 @@ const cors = require('cors');
 
 const logger = require('./helpers/logger');
 const connectDabase = require('./config/database');
+const errorHandler = require('./helpers/error');
 
 // import router
 const filmRouter = require('./routes/film.route');
@@ -22,6 +23,8 @@ app.use(cookieParser());
 
 app.use('/api/v1/film', filmRouter);
 app.use('/api/v1/auth', authRouter);
+
+app.use(errorHandler);
 
 // constant variable
 const PORT = process.env.PORT || 3000;
