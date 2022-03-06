@@ -8,6 +8,11 @@ const errorHandler = (err, req, res, next) => {
 
   logger.error('stack:', err);
 
+  if (err.name === 'CastError') {
+    const message = `Không tìm thấy id với giá trị ${error.value}`;
+    error = new ErrorHandler(message, 404);
+  }
+
   // Bắt lỗi trùng kháo trong Database
   if (err.code === 11000) {
     const message = 'Giá trị của trường bị trùng lặp';
