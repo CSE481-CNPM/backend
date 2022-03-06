@@ -28,3 +28,17 @@ exports.protect = asyncHandler(async (req, res, next) => {
   req.user = user;
   next();
 });
+
+exports.hasAuthorization = (role) => {
+  return asyncHandler(async (req, res, next) => {
+    const user = await User.findById(req.user.id);
+    if (user.role === role) {
+      return next();
+    }
+
+    res.status(401).json({
+      success: false,
+      message: 'Lỗi xác thực'
+    });
+  });
+};
