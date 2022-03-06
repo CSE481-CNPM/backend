@@ -1,37 +1,31 @@
 const asyncHandler = require('../helpers/async');
 const User = require('../models/User.model');
+const ErrorResponse = require('../utils/errorResponse');
 
 /**
  * @description Đăng nhập
  * @route [POST] /api/v1/auth/login
  * @access PUBLIC
  */
-exports.login = asyncHandler(async (req, res) => {
+exports.login = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({
-      success: false,
-      message: 'Hãy cung cấp email và mật khẩu đầy đủ'
-    });
+    return next(
+      new ErrorResponse('Hãy cung cấp email và mật khẩu đầy đủ', 400)
+    );
   }
 
   const user = await User.findOne({ email }).select('+password');
 
   if (!user) {
-    return res.status(401).json({
-      success: false,
-      message: 'Tài khoản không tồn tại'
-    });
+    return next(new ErrorResponse('Tài khoản không tồn tại', 401));
   }
 
   const isMatch = await user.matchPassword(password);
 
   if (!isMatch) {
-    return res.status(401).json({
-      success: false,
-      message: 'Sai mật khẩu'
-    });
+    return next(new ErrorResponse('Sai mật khẩu', 401));
   }
 
   sendTokenResponse(user, 200, res);
@@ -44,7 +38,7 @@ exports.login = asyncHandler(async (req, res) => {
  */
 exports.register = asyncHandler(async (req, res) => {
   const { firstname, lastname, email, phone, password } = req.body;
-  const role = req.body.role === 'admin' || req.body.role ? 'admin' : 'user';
+  const role = req.body.role === 'admin' ? 'admin' : 'user';
 
   const user = await User.create({
     firstname,
@@ -54,7 +48,7 @@ exports.register = asyncHandler(async (req, res) => {
     role
   });
 
-  sendTokenResponse(user, 200, res);
+  sendTokenResponse(user, 201, res);
 });
 
 const sendTokenResponse = async (user, statusCode, res) => {
@@ -72,3 +66,24 @@ const sendTokenResponse = async (user, statusCode, res) => {
     token
   });
 };
+
+/**
+ * @description Xem thông tin tài khoản người dùng
+ * @route [GET] /api/v1/auth/register
+ * @access PRIVATE
+ */
+exports.me = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id);
+
+  if (!user) {
+    return res.status(401).json({
+      success: false,
+      message: 'Lỗi xác thực'
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    user
+  });
+});
