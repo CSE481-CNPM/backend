@@ -30,10 +30,14 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 3000;
 
 const server = app.listen(PORT, () => {
-  logger.info(`Server is start on port ${PORT}`);
+  if (process.env.NODE_ENV !== 'test') {
+    logger.info(`Server is start on port ${PORT}`);
+  }
 });
 
 server.on('unhandledRejection', (err, promise) => {
   logger.error(err.message);
   server.close(() => process.exit(1));
 });
+
+module.exports = app;

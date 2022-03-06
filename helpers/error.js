@@ -6,7 +6,9 @@ const errorHandler = (err, req, res, next) => {
   let error = { ...err };
   error.message = err.message;
 
-  logger.error('stack:', err);
+  if (process.env.NODE_ENV !== 'test') {
+    logger.error('stack:', err);
+  }
 
   if (err.name === 'CastError') {
     const message = `Không tìm thấy id với giá trị ${error.value}`;

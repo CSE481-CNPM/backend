@@ -5,8 +5,9 @@ const connectDabase = async () => {
   const conn = await mongoose.connect(process.env.MONGODB_URI, {
     useUnifiedTopology: true
   });
-
-  logger.info(`MongoDB Connected: ${conn.connection.host}`);
+  if (process.env.NODE_ENV !== 'test') {
+    logger.info(`MongoDB Connected: ${conn.connection.host}`);
+  }
 };
 
 module.exports = connectDabase;
