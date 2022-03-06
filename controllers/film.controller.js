@@ -1,4 +1,5 @@
 const asyncHandler = require('../helpers/async');
+const Film = require('../models/Film.model');
 
 /**
  * @description Xem tất cả các bộ phim có trên website
@@ -6,7 +7,10 @@ const asyncHandler = require('../helpers/async');
  * @access  PUBLIC
  */
 exports.getAll = asyncHandler(async (req, res) => {
+  const film = await Film.find();
+
   res.status(200).json({
-    description: 'get all films'
+    success: true,
+    films: film
   });
 });
