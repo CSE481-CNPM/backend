@@ -1,37 +1,31 @@
 const asyncHandler = require('../helpers/async');
 const User = require('../models/User.model');
+const ErrorResponse = require('../utils/errorResponse');
 
 /**
  * @description Đăng nhập
  * @route [POST] /api/v1/auth/login
  * @access PUBLIC
  */
-exports.login = asyncHandler(async (req, res) => {
+exports.login = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({
-      success: false,
-      message: 'Hãy cung cấp email và mật khẩu đầy đủ'
-    });
+    return next(
+      new ErrorResponse('Hãy cung cấp email và mật khẩu đầy đủ', 400)
+    );
   }
 
   const user = await User.findOne({ email }).select('+password');
 
   if (!user) {
-    return res.status(401).json({
-      success: false,
-      message: 'Tài khoản không tồn tại'
-    });
+    return next(new ErrorResponse('Tài khoản không tồn tại', 401));
   }
 
   const isMatch = await user.matchPassword(password);
 
   if (!isMatch) {
-    return res.status(401).json({
-      success: false,
-      message: 'Sai mật khẩu'
-    });
+    return next(new ErrorResponse('Sai mật khẩu', 401));
   }
 
   sendTokenResponse(user, 200, res);

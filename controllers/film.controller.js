@@ -6,6 +6,7 @@ const asyncHandler = require('../helpers/async');
  * @access  PUBLIC
  */
 exports.getAll = asyncHandler(async (req, res) => {
+
   res.status(200).json({
     description: 'get all films'
   });
