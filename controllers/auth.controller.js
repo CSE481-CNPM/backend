@@ -76,10 +76,7 @@ exports.me = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user.id);
 
   if (!user) {
-    return res.status(401).json({
-      success: false,
-      message: 'Lỗi xác thực'
-    });
+    return next(new ErrorResponse('Lỗi xác thực', 401));
   }
 
   res.status(200).json({

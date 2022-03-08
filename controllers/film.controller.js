@@ -1,3 +1,4 @@
+const ErrorHandler = require('../utils/errorResponse');
 const asyncHandler = require('../helpers/async');
 const Film = require('../models/Film.model');
 const Ticket = require('../models/Ticket.model');
@@ -22,7 +23,7 @@ exports.getAll = asyncHandler(async (req, res) => {
  * @route [POST] /api/v1/film
  * @access  PRIVATE
  */
-exports.create = asyncHandler(async (req, res) => {
+exports.create = asyncHandler(async (req, res, next) => {
   const {
     nameFilm,
     description,
@@ -45,26 +46,32 @@ exports.create = asyncHandler(async (req, res) => {
       const hrs = Math.round(Math.random() * 24);
       const mins = Math.round(Math.random() * 60);
 
-      const formatTime = `${hrs.toString().padStart(2, '0')}:${mins
+      // thời gian bắt đầu chiếu phim
+      const formatTimeStart = `${hrs.toString().padStart(2, '0')}:${mins
         .toString()
         .padStart(2, '0')}`;
+
+      // thời gian kết thúc suất chiếu
+      const rndHour = Math.floor(Math.random() * 3 + 1); // Random khoảng thời gian kết thúc bộ phim (Tối đa 3 tiếng)
+      const formatTimeEnd = `${((hrs + rndHour) % 24)
+        .toString()
+        .padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
 
       // lưu key của object bằng id rạp - giá trị là thông tin của rạp (bao gồm tên rạp và giờ chiếu)
       tableCinema[cinema[i].id] = {
         nameCinema: cinema[i].name,
-        time: formatTime
+        time: `${formatTimeStart} - ${formatTimeEnd}` // Khoảng thời gian của suất chiếu
       };
     }
   }
 
   // khởi tạo mảng chứa mã của ghế ngồi (Khởi tạo mặc đinh ban đầu là false)
   const NUM_SEAT = 20; // sô ghế giới hạn
-  const DIVISIBLE_NUM_SEAT = 5; // số chia hết cho số ghế (Dùng để phân hàng cho ghế)
+  const DIVISIBLE_NUM_SEAT = 5; // số chia hết cho số ghế (Dùng để phân số ghế trên 1 hàng)
   const seatInitial = new Array(NUM_SEAT).fill(false);
 
-  for (let i = 0; i < NUM_SEAT; ++i) {
-    // Mã đầu của dãy ghế - Tính theo hàng dọc
-    /* 
+  // Mã đầu của dãy ghế - Tính theo hàng dọc
+  /* 
     Example:
       A | 1 2 3 4 5
       B | 1 2 3 4 5
@@ -72,7 +79,8 @@ exports.create = asyncHandler(async (req, res) => {
       D | 1 2 3 4 5
 
       Số ghế của các vé có chỗ ngồi tương ứng (vd: A2, B5, C3, ...)
-    */
+  */
+  for (let i = 0; i < NUM_SEAT; ++i) {
     const headSeatCode = String.fromCharCode(
       Math.floor(65 + parseInt(i / DIVISIBLE_NUM_SEAT))
     );
@@ -107,7 +115,7 @@ exports.create = asyncHandler(async (req, res) => {
   const idFilm = film._id;
   let listFilm = []; // Array chứa id rạp đã lưu vào film
   let listTicket = [];
-  const room = Math.floor(Math.random() * 5 + 1);
+  const room = Math.floor(Math.random() * 5 + 1); // random số phòng
 
   for (let idCinema in tableCinema) {
     listFilm = [...listFilm, idCinema];
@@ -136,6 +144,6 @@ exports.create = asyncHandler(async (req, res) => {
       });
     })
     .catch((err) => {
-      return res.status(500).json({ success: false, error: 'Time limted' });
+      return next(new ErrorHandler(err, 500));
     });
 });
