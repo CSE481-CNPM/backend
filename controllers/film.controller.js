@@ -1,7 +1,5 @@
-const ErrorHandler = require('../utils/errorResponse');
 const asyncHandler = require('../helpers/async');
 const Film = require('../models/Film.model');
-const Ticket = require('../models/Ticket.model');
 const Cinema = require('../models/Cinema.model');
 
 /**
