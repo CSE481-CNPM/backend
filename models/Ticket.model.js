@@ -6,10 +6,6 @@ const TicketSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Mời nhập chỗ ngồi']
     },
-    isActive: {
-      type: Boolean,
-      default: false
-    },
     room: {
       type: String,
       required: [true, 'Mời nhập phòng']
@@ -18,17 +14,20 @@ const TicketSchema = new mongoose.Schema(
       type: Number,
       required: [true, 'Mời nhập giá vé']
     },
-    time: {
-      type: String
+    showTime: {
+      type: String,
+      require: true
     },
     filmId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Film'
+    },
+    cinemaId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Cinema'
     }
   },
-  {
-    timestamps: true
-  }
+  { timestamps: true }
 );
 
 module.exports = mongoose.model('Ticket', TicketSchema);

@@ -37,8 +37,6 @@ const FilmSchema = new mongoose.Schema(
       required: [true, 'Ngày chiếu phim không được để trống']
     }
   },
-  {
-    timestamps: true
-  }
+  { timestamps: true }
 );
 module.exports = mongoose.model('Film', FilmSchema);

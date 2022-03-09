@@ -37,49 +37,12 @@ const UserSchema = new mongoose.Schema(
     },
     bookingTicket: [
       {
-        type: Object,
-        nameFilm: {
-          type: String,
-          default: ''
-        },
-        money: {
-          type: Number,
-          default: 0
-        },
-        bookingDate: {
-          type: Date,
-          default: ''
-        },
-        seat: {
-          type: String,
-          default: ''
-        },
-        cinema: {
-          type: String,
-          default: ''
-        },
-        room: {
-          type: String,
-          default: ''
-        },
-        showTime: {
-          type: String,
-          default: ''
-        },
-        movieDay: {
-          type: Date,
-          default: ''
-        },
-        ticket: {
-          ref: 'Ticket',
-          type: mongoose.Schema.Types.ObjectId
-        }
+        ref: 'Ticket',
+        type: mongoose.Schema.Types.ObjectId
       }
     ]
   },
-  {
-    timestamps: true
-  }
+  { timestamps: true }
 );
 
 // Hash password
