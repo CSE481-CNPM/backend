@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const { getAll, single } = require('../controllers/film.controller');
+const { getAll, detail } = require('../controllers/film.controller');
 
 router.get('/', getAll);
-router.get('/:id', single);
+router.get('/:id', detail);
 
 module.exports = router;

@@ -12,9 +12,9 @@ exports.getAll = asyncHandler(async (req, res) => {
   });
 });
 
-exports.single = asyncHandler(async (req, res, next) => {
+exports.detail = asyncHandler(async (req, res, next) => {
   const id = req.params.id;
-  const film = await Film.findById(id);
+  const film = await Film.findById(id).select('-cinema');
 
   res.status(200).json({
     success: true,
