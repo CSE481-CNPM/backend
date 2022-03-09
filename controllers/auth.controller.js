@@ -37,7 +37,7 @@ exports.login = asyncHandler(async (req, res, next) => {
  * @access PUBLIC
  */
 exports.register = asyncHandler(async (req, res) => {
-  const { firstname, lastname, email, phone, password } = req.body;
+  const { firstname, lastname, email, password } = req.body;
   const role = req.body.role === 'admin' ? 'admin' : 'user';
 
   const user = await User.create({
