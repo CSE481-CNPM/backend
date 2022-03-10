@@ -36,7 +36,10 @@ const MovieSchema = new mongoose.Schema(
       type: Date,
       required: [true, 'Ngày chiếu phim không được để trống']
     },
-    urlImg: {
+    background: {
+      type: String
+    },
+    avatar: {
       type: String
     }
   },

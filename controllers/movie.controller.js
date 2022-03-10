@@ -30,7 +30,8 @@ exports.create = asyncHandler(async (req, res, next) => {
     category,
     actor,
     movieDay,
-    urlImg
+    background,
+    avatar
   } = req.body;
 
   const movie = new Movie();
@@ -46,7 +47,8 @@ exports.create = asyncHandler(async (req, res, next) => {
   movie.category = category;
   movie.actor = actor;
   movie.movieDay = movieDay;
-  movie.urlImg = urlImg;
+  movie.background = background;
+  movie.avatar = avatar;
 
   await movie.save();
 
