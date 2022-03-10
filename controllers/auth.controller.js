@@ -37,7 +37,7 @@ exports.login = asyncHandler(async (req, res, next) => {
  * @access PUBLIC
  */
 exports.register = asyncHandler(async (req, res) => {
-  const { firstname, lastname, email, phone, password } = req.body;
+  const { firstname, lastname, email, password } = req.body;
   const role = req.body.role === 'admin' ? 'admin' : 'user';
 
   const user = await User.create({
@@ -76,10 +76,7 @@ exports.me = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user.id);
 
   if (!user) {
-    return res.status(401).json({
-      success: false,
-      message: 'Lỗi xác thực'
-    });
+    return next(new ErrorResponse('Lỗi xác thực', 401));
   }
 
   res.status(200).json({

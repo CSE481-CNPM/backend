@@ -15,4 +15,4 @@ const CinemaSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = CinemaSchema.model('Cinema', CinemaSchema);
+module.exports = mongoose.model('Cinema', CinemaSchema);
