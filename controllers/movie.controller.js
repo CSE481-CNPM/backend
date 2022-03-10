@@ -1,5 +1,5 @@
 const asyncHandler = require('../helpers/async');
-const Film = require('../models/Film.model');
+const Movie = require('../models/Movie.model');
 const Cinema = require('../models/Cinema.model');
 
 /**
@@ -30,19 +30,19 @@ exports.create = asyncHandler(async (req, res, next) => {
     movieDay
   } = req.body;
 
-  const film = new Film();
+  const movie = new Movie();
   const cinema = await Cinema.find({}, ['_id']);
   const listCinema = new Array(cinema.length);
 
   for (let i = 0; i < listCinema.length; ++i) listCinema[i] = cinema[i]['_id'];
-  film.cinema = listCinema;
-  film.nameFilm = nameFilm;
-  film.description = description;
-  film.director = director;
-  film.country = country;
-  film.category = category;
-  film.actor = actor;
-  film.movieDay = movieDay;
+  movie.cinema = listCinema;
+  movie.nameFilm = nameFilm;
+  movie.description = description;
+  movie.director = director;
+  movie.country = country;
+  movie.category = category;
+  movie.actor = actor;
+  movie.movieDay = movieDay;
 
   await film.save();
 
@@ -54,10 +54,10 @@ exports.create = asyncHandler(async (req, res, next) => {
 
 exports.detail = asyncHandler(async (req, res, next) => {
   const id = req.params.id;
-  const film = await Film.findById(id).select('-cinema');
+  const movie = await Movie.findById(id).select('-cinema');
 
   res.status(200).json({
     success: true,
-    film
+    movie
   });
 });
