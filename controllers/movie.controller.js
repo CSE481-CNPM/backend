@@ -7,9 +7,7 @@ const Cinema = require('../models/Cinema.model');
  * @route [GET] /api/v1/film
  * @access  PUBLIC
  */
-exports.getAll = asyncHandler(async (req, res) => {
-  const film = await Film.find();
-
+exports.get = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     films: film
