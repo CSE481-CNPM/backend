@@ -9,7 +9,7 @@ const connectDabase = require('./config/database');
 const errorHandler = require('./helpers/error');
 
 // import router
-const filmRouter = require('./routes/film.route');
+const movieRouter = require('./routes/movie.route');
 const authRouter = require('./routes/auth.route');
 const ticketRouter = require('./routes/ticket.router');
 
@@ -22,7 +22,7 @@ app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
-app.use('/api/v1/film', filmRouter);
+app.use('/api/v1/movie', movieRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/ticket', ticketRouter);
 

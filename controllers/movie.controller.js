@@ -5,8 +5,7 @@ const asyncHandler = require('../helpers/async');
  * @route [GET] /api/v1/film
  * @access  PUBLIC
  */
-exports.getAll = asyncHandler(async (req, res) => {
-
+exports.get = asyncHandler(async (req, res) => {
   res.status(200).json({
     description: 'get all films'
   });
