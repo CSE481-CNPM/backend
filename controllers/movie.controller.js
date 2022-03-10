@@ -8,9 +8,11 @@ const Cinema = require('../models/Cinema.model');
  * @access  PUBLIC
  */
 exports.all = asyncHandler(async (req, res) => {
+  const movie = await Movie.find();
+
   res.status(200).json({
     success: true,
-    films: film
+    films: movie
   });
 });
 
@@ -44,19 +46,9 @@ exports.create = asyncHandler(async (req, res, next) => {
   movie.actor = actor;
   movie.movieDay = movieDay;
 
-  await film.save();
+  await movie.save();
 
   return res.status(201).json({
-    success: true,
-    film
-  });
-});
-
-exports.detail = asyncHandler(async (req, res, next) => {
-  const id = req.params.id;
-  const movie = await Movie.findById(id).select('-cinema');
-
-  res.status(200).json({
     success: true,
     movie
   });
