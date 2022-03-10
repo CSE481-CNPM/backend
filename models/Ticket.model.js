@@ -25,6 +25,10 @@ const TicketSchema = new mongoose.Schema(
     cinemaId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Cinema'
+    },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
     }
   },
   { timestamps: true }

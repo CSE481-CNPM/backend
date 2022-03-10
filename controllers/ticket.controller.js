@@ -8,8 +8,14 @@ exports.create = asyncHandler(async (req, res, next) => {
   const body = req.body;
   const { filmId, cinemaId, showTime, seat, room, price = 70000 } = body;
 
-  await Movie.findById(filmId);
-  await Cinema.findById(cinemaId);
+  const movie = await Movie.findById(filmId);
+  const cinema = await Cinema.findById(cinemaId);
+
+  if (!movie || !cinema) {
+    return next(
+      new ErrorResponse('Thông tin chưa đầy đủ hãy kiểm tra lại', 400)
+    );
+  }
 
   const findTicket = await Ticket.find({
     filmId,
@@ -18,16 +24,17 @@ exports.create = asyncHandler(async (req, res, next) => {
   });
 
   if (findTicket.length) {
-    return next(new ErrorHandler('Chỗ ngồi đã có người đặt', 400));
+    return next(new ErrorResponse('Chỗ ngồi đã có người đặt', 400));
   }
 
-  const ticket = await Ticket({
+  const ticket = await Ticket.create({
     filmId,
     cinemaId,
     showTime,
     seat,
     room,
-    price
+    price,
+    userId: req.user.id
   });
 
   return res.status(201).json({
