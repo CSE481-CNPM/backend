@@ -53,3 +53,13 @@ exports.create = asyncHandler(async (req, res, next) => {
     movie
   });
 });
+
+exports.detail = asyncHandler(async (req, res, next) => {
+  const id = req.params.id;
+  const movie = await Movie.findById(id).select('-cinema');
+
+  res.status(200).json({
+    success: true,
+    movie
+  });
+});
