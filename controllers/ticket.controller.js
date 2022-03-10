@@ -42,3 +42,12 @@ exports.create = asyncHandler(async (req, res, next) => {
     ticket
   });
 });
+
+exports.all = asyncHandler(async (req, res, next) => {
+  const ticket = await Ticket.find({ userId: req.user.id });
+
+  res.status(200).json({
+    success: true,
+    ticket
+  });
+});
