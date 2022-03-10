@@ -11,6 +11,7 @@ const errorHandler = require('./helpers/error');
 // import router
 const filmRouter = require('./routes/film.route');
 const authRouter = require('./routes/auth.route');
+const ticketRouter = require('./routes/ticket.router');
 
 // process config
 const app = express();
@@ -23,6 +24,7 @@ app.use(cookieParser());
 
 app.use('/api/v1/film', filmRouter);
 app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/ticket', ticketRouter);
 
 app.use(errorHandler);
 
