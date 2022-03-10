@@ -20,7 +20,8 @@ exports.create = asyncHandler(async (req, res, next) => {
   const findTicket = await Ticket.find({
     filmId,
     cinemaId,
-    showTime
+    showTime,
+    seat
   });
 
   if (findTicket.length) {
