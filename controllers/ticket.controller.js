@@ -1,21 +1,19 @@
 const asyncHandler = require('../helpers/async');
 const ErrorResponse = require('../utils/errorResponse');
 const Ticket = require('../models/Ticket.model');
+const Movie = require('../models/Movie.model');
+const Cinema = require('../models/Cinema.model');
 
 exports.create = asyncHandler(async (req, res, next) => {
   const body = req.body;
-  const { fid, cid, showTime, seat, room, price = 70000 } = body;
+  const { filmId, cinemaId, showTime, seat, room, price = 70000 } = body;
 
-  if (!fid && !cid) {
-    const message = !fid
-      ? 'Không xác định được phim'
-      : 'Không xác định được rạp';
-    next(new ErrorResponse(message, 400));
-  }
+  await Movie.findById(filmId);
+  await Cinema.findById(cinemaId);
 
   const findTicket = await Ticket.find({
-    filmId: fid,
-    cinemaId: cid,
+    filmId,
+    cinemaId,
     showTime
   });
 
@@ -24,8 +22,8 @@ exports.create = asyncHandler(async (req, res, next) => {
   }
 
   const ticket = await Ticket({
-    filmId: fid,
-    cinemaId: cid,
+    filmId,
+    cinemaId,
     showTime,
     seat,
     room,
