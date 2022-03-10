@@ -12,6 +12,7 @@ const errorHandler = require('./helpers/error');
 const movieRouter = require('./routes/movie.route');
 const authRouter = require('./routes/auth.route');
 const ticketRouter = require('./routes/ticket.router');
+const seatRouter = require('./routes/seat.route');
 
 // process config
 const app = express();
@@ -25,6 +26,7 @@ app.use(cookieParser());
 app.use('/api/v1/movie', movieRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/ticket', ticketRouter);
+app.use('/api/v1/seat', seatRouter);
 
 app.use(errorHandler);
 
