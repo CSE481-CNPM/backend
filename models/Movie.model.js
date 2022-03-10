@@ -23,7 +23,7 @@ const MovieSchema = new mongoose.Schema(
       required: [true, 'Thể loại phim không được bỏ trống']
     },
     actor: {
-      type: Array,
+      type: String,
       required: [true, 'Diễn viên chính của phim không được để trống']
     },
     cinema: [
