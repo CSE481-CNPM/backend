@@ -13,6 +13,7 @@ const movieRouter = require('./routes/movie.route');
 const authRouter = require('./routes/auth.route');
 const ticketRouter = require('./routes/ticket.router');
 const seatRouter = require('./routes/seat.route');
+const cinemaRouter = require('./routes/cinema.route');
 
 // process config
 const app = express();
@@ -27,6 +28,7 @@ app.use('/api/v1/movie', movieRouter);
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/ticket', ticketRouter);
 app.use('/api/v1/seat', seatRouter);
+app.use('/api/v1/cinema', cinemaRouter);
 
 app.use(errorHandler);
 
