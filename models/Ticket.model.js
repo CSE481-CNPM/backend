@@ -20,7 +20,7 @@ const TicketSchema = new mongoose.Schema(
     },
     filmId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Film'
+      ref: 'Movie'
     },
     cinemaId: {
       type: mongoose.Schema.Types.ObjectId,

@@ -45,7 +45,9 @@ exports.create = asyncHandler(async (req, res, next) => {
 });
 
 exports.all = asyncHandler(async (req, res, next) => {
-  const ticket = await Ticket.find({ userId: req.user.id });
+  const ticket = await Ticket.find({ userId: req.user.id })
+    .populate([{ path: 'filmId' }, { path: 'cinemaId' }])
+    .exec();
 
   res.status(200).json({
     success: true,
