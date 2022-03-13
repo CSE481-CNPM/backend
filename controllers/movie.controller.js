@@ -1,10 +1,11 @@
 const asyncHandler = require('../helpers/async');
 const Movie = require('../models/Movie.model');
 const Cinema = require('../models/Cinema.model');
+const ErrorResponse = require('../utils/errorResponse');
 
 /**
  * @description Xem tất cả các bộ phim có trên website
- * @route [GET] /api/v1/film
+ * @route [GET] /api/v1/movie
  * @access  PUBLIC
  */
 exports.all = asyncHandler(async (req, res) => {
@@ -18,7 +19,7 @@ exports.all = asyncHandler(async (req, res) => {
 
 /**
  * @description Thêm mới 1 bộ phim (admin)
- * @route [POST] /api/v1/film
+ * @route [POST] /api/v1/movie
  * @access  PRIVATE
  */
 exports.create = asyncHandler(async (req, res, next) => {
@@ -58,12 +59,39 @@ exports.create = asyncHandler(async (req, res, next) => {
   });
 });
 
+/**
+ * @description Xem chi tiết 1 bộ phim
+ * @route [GET] /api/v1/movie/:id
+ * @access PUBLIC
+ */
 exports.detail = asyncHandler(async (req, res, next) => {
   const id = req.params.id;
   const movie = await Movie.findById(id).select('-cinema');
+
+  if (!movie) {
+    return next(new ErrorResponse('Không tìm thấy phim', 404));
+  }
 
   res.status(200).json({
     success: true,
     movie
   });
+});
+
+/**
+ * @description Cập nhật 1 bộ phim (Admin)
+ * @route [PUT] /api/v1/movie/:id
+ * @access PRIVATE
+ */
+exports.update = asyncHandler(async (req, res, next) => {
+  const movie = await Movie.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true
+  });
+
+  if (!movie) {
+    return res.status(400).json({ success: false });
+  }
+
+  res.status(200).json(movie);
 });
