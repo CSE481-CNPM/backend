@@ -85,3 +85,49 @@ exports.me = asyncHandler(async (req, res, next) => {
     user
   });
 });
+
+/**
+ * @description Danh sách tài khoản đã đăng ký (Admin)
+ * @route [GET] /api/v1/auth/user
+ * @access PRIVATE
+ */
+exports.list = asyncHandler(async (req, res, next) => {
+  const users = await User.find();
+
+  res.status(200).json({
+    success: true,
+    users
+  });
+});
+
+/**
+ * @description Danh sách tài khoản đã đăng ký (Admin)
+ * @route [PUT] /api/v1/auth/user/:id/role
+ * @access PRIVATE
+ */
+exports.changeRole = asyncHandler(async (req, res, next) => {
+  const id = req.params.id;
+  const role = req.body.role;
+
+  if (!role || !['admin', 'user'].includes(role)) {
+    return next(new ErrorResponse('Quyền không hợp lệ', 400));
+  }
+
+  const user = await User.findByIdAndUpdate(
+    id,
+    { role },
+    {
+      new: true,
+      runValidators: true
+    }
+  );
+
+  if (!user) {
+    return res.status(400).json({ success: false });
+  }
+
+  res.status(200).json({
+    success: true,
+    message: 'Sửa quyền thành công'
+  });
+});
