@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const asyncHandler = require('../helpers/async');
 const User = require('../models/User.model');
+const ErrorResponse = require('../utils/errorResponse');
 
 exports.protect = asyncHandler(async (req, res, next) => {
   let token;
@@ -15,10 +16,7 @@ exports.protect = asyncHandler(async (req, res, next) => {
   }
 
   if (!token) {
-    return res.status(401).json({
-      success: false,
-      message: 'Lỗi xác thực'
-    });
+    return next(new ErrorResponse('Lỗi xác thực', 401));
   }
 
   const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
