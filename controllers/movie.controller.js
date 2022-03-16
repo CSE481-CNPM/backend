@@ -84,6 +84,7 @@ exports.detail = asyncHandler(async (req, res, next) => {
  * @access PRIVATE
  */
 exports.update = asyncHandler(async (req, res, next) => {
+  delete req.body.cinema;
   const movie = await Movie.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true
