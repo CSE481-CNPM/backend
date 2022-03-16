@@ -5,11 +5,20 @@ const { protect, hasAuthorization } = require('../middleware/auth');
 const {
   create,
   all,
-  showForAdmin
+  showForAdmin,
+  status,
+  statusForAdmin
 } = require('../controllers/ticket.controller');
 
 router.get('/', protect, all);
 router.post('/', protect, create);
 router.get('/list', protect, hasAuthorization('admin'), showForAdmin);
+router.put('/:id/status', protect, status);
+router.put(
+  '/:tid/user/:uid/status',
+  protect,
+  hasAuthorization('admin'),
+  statusForAdmin
+);
 
 module.exports = router;

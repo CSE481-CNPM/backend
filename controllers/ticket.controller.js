@@ -4,6 +4,11 @@ const Ticket = require('../models/Ticket.model');
 const Movie = require('../models/Movie.model');
 const Cinema = require('../models/Cinema.model');
 
+/**
+ * @description Đặt vé xem phim
+ * @route [POST] /api/v1/ticket
+ * @access PRIVATE
+ */
 exports.create = asyncHandler(async (req, res, next) => {
   const body = req.body;
   const { filmId, cinemaId, showTime, seat, room, price = 70000 } = body;
@@ -44,6 +49,11 @@ exports.create = asyncHandler(async (req, res, next) => {
   });
 });
 
+/**
+ * @description Hiện thị danh sách về mà tài khoản đó đã đặt
+ * @route [GET] /api/v1/ticket
+ * @access PRIVATE
+ */
 exports.all = asyncHandler(async (req, res, next) => {
   const ticket = await Ticket.find({ userId: req.user.id })
     .populate([{ path: 'filmId' }, { path: 'cinemaId' }])
@@ -59,6 +69,11 @@ exports.all = asyncHandler(async (req, res, next) => {
   });
 });
 
+/**
+ * @description Hiện thị danh sách tất cả các vé đã đặt bao gồm người dùng khác và admin (Admin)
+ * @route [GET] /api/v1/ticket/list
+ * @access PRIVATE
+ */
 exports.showForAdmin = asyncHandler(async (req, res, next) => {
   const ticket = await Ticket.find()
     .populate([{ path: 'filmId' }, { path: 'cinemaId' }, { path: 'userId' }])
@@ -67,5 +82,70 @@ exports.showForAdmin = asyncHandler(async (req, res, next) => {
   return res.status(200).json({
     success: true,
     ticket
+  });
+});
+
+/**
+ * @description Hủy vé đã đặt của tài khoản hiện tại
+ * @route [PUT] /api/v1/ticket/:id
+ * @access PRIVATE
+ */
+exports.status = asyncHandler(async (req, res, next) => {
+  const id = req.params.id;
+  const status = req.body.status;
+
+  if (!status | !['booked', 'cancelled'].includes(status)) {
+    return next(new ErrorResponse('Trạng thái vé không hợp lệ', 400));
+  }
+
+  const ticket = await Ticket.findByIdAndUpdate(
+    id,
+    { status },
+    {
+      new: true,
+      runValidators: true
+    }
+  );
+
+  if (!ticket) {
+    return res.status(400).json({ success: true });
+  }
+
+  return res.status(200).json({
+    success: true,
+    status
+  });
+});
+
+/**
+ * @description Hủy vé đã đặt của tất cả tài khoản khi đã đặt vé (Admin)
+ * @route [PUT] /api/v1/ticket/:tid/user/:uid
+ * @access PRIVATE
+ */
+exports.statusForAdmin = asyncHandler(async (req, res, next) => {
+  const tid = req.params.tid;
+  const uid = req.params.uid;
+  const status = req.body.status;
+
+  if (!status | !['booked', 'cancelled'].includes(status)) {
+    return next(new ErrorResponse('Trạng thái vé không hợp lệ', 400));
+  }
+
+  const ticket = await Ticket.findOneAndUpdate(
+    { userId: uid, _id: tid },
+    { status },
+    {
+      new: true,
+      runValidators: true
+    }
+  );
+
+  if (!ticket) {
+    return res.status(400).json({ success: true });
+  }
+
+  return res.status(200).json({
+    success: true,
+    status
   });
 });
