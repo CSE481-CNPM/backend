@@ -49,7 +49,22 @@ exports.all = asyncHandler(async (req, res, next) => {
     .populate([{ path: 'filmId' }, { path: 'cinemaId' }])
     .exec();
 
+  if (!ticket) {
+    return next(ErrorResponse('Không tìm thấy thông tin', 404));
+  }
+
   res.status(200).json({
+    success: true,
+    ticket
+  });
+});
+
+exports.showForAdmin = asyncHandler(async (req, res, next) => {
+  const ticket = await Ticket.find()
+    .populate([{ path: 'filmId' }, { path: 'cinemaId' }, { path: 'userId' }])
+    .exec();
+
+  return res.status(200).json({
     success: true,
     ticket
   });
