@@ -27,7 +27,9 @@ exports.create = asyncHandler(async (req, res, next) => {
     cinemaId,
     showTime,
     seat
-  });
+  })
+    .where('status')
+    .in(['booked']);
 
   if (findTicket.length) {
     return next(new ErrorResponse('Chỗ ngồi đã có người đặt', 400));
@@ -100,7 +102,7 @@ exports.status = asyncHandler(async (req, res, next) => {
 
   const ticket = await Ticket.findByIdAndUpdate(
     id,
-    { status },
+    { status, seat: '' },
     {
       new: true,
       runValidators: true
@@ -124,7 +126,7 @@ exports.status = asyncHandler(async (req, res, next) => {
  */
 exports.statusForAdmin = asyncHandler(async (req, res, next) => {
   const tid = req.params.tid;
-  const uid = req.params.uid;
+  const fid = req.params.fid;
   const status = req.body.status;
 
   if (!status | !['booked', 'cancelled'].includes(status)) {
@@ -132,7 +134,7 @@ exports.statusForAdmin = asyncHandler(async (req, res, next) => {
   }
 
   const ticket = await Ticket.findOneAndUpdate(
-    { userId: uid, _id: tid },
+    { filmId: fid, _id: tid },
     { status },
     {
       new: true,

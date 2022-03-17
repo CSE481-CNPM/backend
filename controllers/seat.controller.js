@@ -13,7 +13,12 @@ exports.show = asyncHanler(async (req, res, next) => {
     showTime: format_st
   });
 
-  const listBookedTickets = ticket.map((ticket) => ticket['seat']);
+  const listBookedTickets = [];
+
+  for (let i = 0; i < ticket.length; ++i) {
+    if (ticket[i]['status'] === 'booked')
+      listBookedTickets.push(ticket[i]['seat']);
+  }
 
   res.status(200).json({
     success: true,
