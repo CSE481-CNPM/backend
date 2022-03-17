@@ -35,12 +35,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       default: ''
     },
-    bookingTicket: [
-      {
-        ref: 'Ticket',
-        type: mongoose.Schema.Types.ObjectId
-      }
-    ]
+    message: [{ type: String }]
   },
   { timestamps: true }
 );

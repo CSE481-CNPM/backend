@@ -3,6 +3,7 @@ const ErrorResponse = require('../utils/errorResponse');
 const Ticket = require('../models/Ticket.model');
 const Movie = require('../models/Movie.model');
 const Cinema = require('../models/Cinema.model');
+const User = require('../models/User.model');
 
 /**
  * @description Đặt vé xem phim
@@ -143,6 +144,20 @@ exports.statusForAdmin = asyncHandler(async (req, res, next) => {
 
   if (!ticket) {
     return res.status(400).json({ success: true });
+  }
+
+  if (status === 'cancelled') {
+    const message = 'Vé của bạn bị quản trị viện hủy vì 1 số lý do sự cố.';
+
+    const listTicket = await Ticket.find({ filmId: fid }).select({
+      userId: 1,
+      _id: 0
+    });
+
+    await User.updateMany(
+      { userId: { $in: listTicket } },
+      { $push: { message } }
+    );
   }
 
   return res.status(200).json({
