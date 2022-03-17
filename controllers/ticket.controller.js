@@ -102,7 +102,7 @@ exports.status = asyncHandler(async (req, res, next) => {
 
   const ticket = await Ticket.findByIdAndUpdate(
     id,
-    { status, seat: '' },
+    { status },
     {
       new: true,
       runValidators: true
