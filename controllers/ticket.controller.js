@@ -147,12 +147,34 @@ exports.statusForAdmin = asyncHandler(async (req, res, next) => {
   }
 
   if (status === 'cancelled') {
-    const message = 'Vé của bạn bị quản trị viện hủy vì 1 số lý do sự cố.';
-
     const listTicket = await Ticket.find({ filmId: fid }).select({
       userId: 1,
       _id: 0
     });
+
+    const movie = await Movie.findById(fid).select({
+      _id: 0,
+      nameFilm: 1
+    });
+
+    const d = new Date();
+    const dateFormat =
+      [
+        (d.getMonth() + 1).toString().padStart(2, '0'),
+        d.getDate().toString().padStart(2, '0'),
+        d.getFullYear()
+      ].join('/') +
+      ' ' +
+      [
+        d.getHours().toString().padStart(2, '0'),
+        d.getMinutes().toString().padStart(2, '0'),
+        d.getSeconds().toString().padStart(2, '0')
+      ].join(':');
+
+    const message = {
+      content: `Vé của phim "${movie['nameFilm']}" đã bị quản trị viên hủy vì sự cố. Chúng tôi sẽ thực hiện chính sách hoàn tiền trong 3 ngày kể từ hôm nay. Chúng tôi thành thực xin lỗi vì sự bất tiện này!`,
+      time: dateFormat
+    };
 
     await User.updateMany(
       { userId: { $in: listTicket } },

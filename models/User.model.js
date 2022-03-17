@@ -35,7 +35,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       default: ''
     },
-    message: [{ type: String }]
+    message: [{ type: Object }]
   },
   { timestamps: true }
 );
