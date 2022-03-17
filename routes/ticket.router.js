@@ -15,7 +15,7 @@ router.post('/', protect, create);
 router.get('/list', protect, hasAuthorization('admin'), showForAdmin);
 router.put('/:id/status', protect, status);
 router.put(
-  '/:tid/film/:fid/status',
+  '/film/:fid/status',
   protect,
   hasAuthorization('admin'),
   statusForAdmin

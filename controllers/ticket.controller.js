@@ -125,7 +125,6 @@ exports.status = asyncHandler(async (req, res, next) => {
  * @access PRIVATE
  */
 exports.statusForAdmin = asyncHandler(async (req, res, next) => {
-  const tid = req.params.tid;
   const fid = req.params.fid;
   const status = req.body.status;
 
@@ -134,7 +133,7 @@ exports.statusForAdmin = asyncHandler(async (req, res, next) => {
   }
 
   const ticket = await Ticket.findOneAndUpdate(
-    { filmId: fid, _id: tid },
+    { filmId: fid },
     { status },
     {
       new: true,
